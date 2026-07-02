@@ -44,9 +44,12 @@ allowed_origins = os.getenv(
 
 allowed_origins = [origin.strip() for origin in allowed_origins if origin.strip()]
 
+print("Allowed origins:", allowed_origins)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -115,14 +118,6 @@ def explain(request: ExplainRequest):
         source = "fallback"
 
     explanation = normalize_explanation(explanation, request.question)
-
-    storyboard = None
-    storyboard_source = None
-    storyboard_model_used = None
-
-    use_gemini_storyboard = (
-        os.getenv("USE_GEMINI_STORYBOARD", "false").lower() == "true"
-    )
 
     storyboard = None
     storyboard_source = None
