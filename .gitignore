@@ -1,0 +1,21 @@
+# Environment files
+.env
+client/.env
+server/.env
+
+# Python
+server/.venv/
+__pycache__/
+*.pyc
+
+# SQLite local database
+server/conceptcanvas.db
+*.db
+
+# Node
+client/node_modules/
+client/dist/
+
+# OS/editor
+.DS_Store
+.vscode/

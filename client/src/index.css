@@ -1,0 +1,340 @@
+@import "tailwindcss";
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f7f8fb;
+  color: #111827;
+}
+
+@keyframes flowItemIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes flowArrowIn {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-flow-item {
+  opacity: 0;
+  animation: flowItemIn 450ms ease forwards;
+}
+
+.animate-flow-arrow {
+  opacity: 0;
+  animation: flowArrowIn 350ms ease forwards;
+}
+
+@keyframes stackItemIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-stack-item {
+  opacity: 0;
+  animation: stackItemIn 450ms ease forwards;
+}
+
+@keyframes highlightPulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+
+  100% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+}
+
+@keyframes highlightChipIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-highlight-pulse {
+  animation: highlightPulse 1200ms ease forwards;
+}
+
+.animate-highlight-chip {
+  opacity: 0;
+  animation: highlightChipIn 400ms ease forwards;
+}
+
+@keyframes compareLeftIn {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes compareRightIn {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-compare-left {
+  opacity: 0;
+  animation: compareLeftIn 450ms ease forwards;
+}
+
+.animate-compare-right {
+  opacity: 0;
+  animation: compareRightIn 450ms ease forwards;
+  animation-delay: 200ms;
+}
+
+@keyframes splitRootIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes splitLineGrow {
+  from {
+    opacity: 0;
+    height: 0;
+  }
+
+  to {
+    opacity: 1;
+    height: 2rem;
+  }
+}
+
+@keyframes splitBranchesIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-split-root {
+  opacity: 0;
+  animation: splitRootIn 450ms ease forwards;
+}
+
+.animate-split-line {
+  opacity: 0;
+  animation: splitLineGrow 400ms ease forwards;
+  animation-delay: 250ms;
+}
+
+.animate-split-branches {
+  opacity: 0;
+  animation: splitBranchesIn 450ms ease forwards;
+  animation-delay: 550ms;
+}
+
+@keyframes timelineLineGrow {
+  from {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes timelineItemIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-timeline-line {
+  opacity: 0;
+  transform-origin: left;
+  animation: timelineLineGrow 700ms ease forwards;
+}
+
+.animate-timeline-item {
+  opacity: 0;
+  animation: timelineItemIn 450ms ease forwards;
+}
+
+.app-theme {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
+}
+
+.app-theme[data-theme="dark"] {
+  background: #020617;
+  color: #e5e7eb;
+}
+
+.app-theme[data-theme="dark"] .bg-white {
+  background-color: #0f172a;
+}
+
+.app-theme[data-theme="dark"] .bg-gray-50 {
+  background-color: #111827;
+}
+
+.app-theme[data-theme="dark"] .bg-blue-50,
+.app-theme[data-theme="dark"] .bg-indigo-50,
+.app-theme[data-theme="dark"] .bg-green-50,
+.app-theme[data-theme="dark"] .bg-amber-50,
+.app-theme[data-theme="dark"] .bg-red-50 {
+  background-color: rgba(30, 41, 59, 0.9);
+}
+
+.app-theme[data-theme="dark"] .text-gray-950,
+.app-theme[data-theme="dark"] .text-gray-900,
+.app-theme[data-theme="dark"] .text-gray-800,
+.app-theme[data-theme="dark"] .text-blue-950,
+.app-theme[data-theme="dark"] .text-indigo-950,
+.app-theme[data-theme="dark"] .text-green-950,
+.app-theme[data-theme="dark"] .text-amber-950 {
+  color: #f8fafc;
+}
+
+.app-theme[data-theme="dark"] .text-gray-700,
+.app-theme[data-theme="dark"] .text-gray-600,
+.app-theme[data-theme="dark"] .text-blue-900,
+.app-theme[data-theme="dark"] .text-indigo-900,
+.app-theme[data-theme="dark"] .text-green-900,
+.app-theme[data-theme="dark"] .text-amber-900 {
+  color: #cbd5e1;
+}
+
+.app-theme[data-theme="dark"] .text-gray-500,
+.app-theme[data-theme="dark"] .text-gray-400 {
+  color: #94a3b8;
+}
+
+.app-theme[data-theme="dark"] .border-gray-100,
+.app-theme[data-theme="dark"] .border-gray-200,
+.app-theme[data-theme="dark"] .border-blue-100,
+.app-theme[data-theme="dark"] .border-indigo-100,
+.app-theme[data-theme="dark"] .border-green-100,
+.app-theme[data-theme="dark"] .border-amber-100 {
+  border-color: #334155;
+}
+
+.app-theme[data-theme="dark"] textarea {
+  color: #f8fafc;
+}
+
+.app-theme[data-theme="dark"] textarea::placeholder {
+  color: #64748b;
+}
+
+.app-theme[data-theme="dark"] .shadow-sm {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+.app-theme[data-theme="dark"],
+.app-theme[data-theme="dark"] main {
+  background-color: #020617;
+}
+
+.app-theme[data-theme="dark"] .bg-\[\#f7f8fb\] {
+  background-color: #020617;
+}
+
+.app-theme[data-theme="dark"] .bg-white {
+  background-color: #0f172a;
+}
+
+.app-theme[data-theme="dark"] .bg-gray-50 {
+  background-color: #111827;
+}
+
+.app-theme[data-theme="dark"] .border-gray-100,
+.app-theme[data-theme="dark"] .border-gray-200 {
+  border-color: #334155;
+}
+
+.app-theme[data-theme="dark"] .text-gray-950,
+.app-theme[data-theme="dark"] .text-gray-900,
+.app-theme[data-theme="dark"] .text-gray-800 {
+  color: #f8fafc;
+}
+
+.app-theme[data-theme="dark"] .text-gray-700,
+.app-theme[data-theme="dark"] .text-gray-600 {
+  color: #cbd5e1;
+}
+
+.app-theme[data-theme="dark"] .text-gray-500,
+.app-theme[data-theme="dark"] .text-gray-400 {
+  color: #94a3b8;
+}
