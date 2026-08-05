@@ -48,7 +48,7 @@ def normalize_explanation(raw_explanation: dict, question: str) -> dict:
     )
 
     step_by_step = ensure_string_list(
-        raw_explanation.get("stepByStep"),
+        raw_explanation.get("stepByStep") or raw_explanation.get("steps"),
         [
             "Start with the basic meaning of the concept.",
             "Identify the main parts involved.",
@@ -60,7 +60,7 @@ def normalize_explanation(raw_explanation: dict, question: str) -> dict:
     )
 
     real_world_example = ensure_string(
-        raw_explanation.get("realWorldExample"),
+        raw_explanation.get("realWorldExample") or raw_explanation.get("example"),
         "A real-world example helps connect the concept to something practical.",
     )
 

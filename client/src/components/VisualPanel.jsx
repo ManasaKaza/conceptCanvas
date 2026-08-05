@@ -1,50 +1,107 @@
+import { AlertTriangle, CheckCircle2, ChevronDown, Info, ShieldCheck } from "lucide-react";
 import VisualLessonPlayer from "./VisualLessonPlayer";
+import GroundingReportPanel from "./GroundingReportPanel";
 
-function VisualPanel({ storyboard, storyboardSource, storyboardModelUsed }) {
-    const scenes = storyboard?.scenes || [];
+function humanize(value) {
+  return value ? value.replaceAll("_", " ") : "Not available";
+}
 
-    return (
-        <section className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
-            <div className="mb-5 flex items-start justify-between gap-3">
-                <div>
-                    <p className="mb-2 text-xs font-semibold uppercase tracking-[0.18em] text-gray-400">
-                        Visual Explanation
-                    </p>
+function VisualPanel({
+  storyboard,
+  storyboardSource,
+  storyboardModelUsed,
+  storyboardValidation,
+  qualityReport,
+  groundingReport,
+}) {
+  const scenes = storyboard?.scenes || [];
+  const planningProfile = storyboard?.planningProfile;
+  const usedFallback = storyboardValidation?.fallbackUsed;
+  const issues = storyboardValidation?.issues || [];
+  const qualityStatus = qualityReport?.status || "warn";
+  const qualityScore = qualityReport?.overallScore;
+  const qualityMetrics = qualityReport?.metrics;
+  const qualityIssues = qualityReport?.issues || [];
+  const repair = qualityReport?.repair;
+  const groundingStatus = groundingReport?.status;
+  const lessonKey = scenes.map((scene) => `${scene?.id || ""}:${scene?.title || ""}:${scene?.narration || ""}`).join("|");
+  const isVerified = qualityStatus === "pass" && groundingStatus !== "fail";
+  const StatusIcon = isVerified ? CheckCircle2 : AlertTriangle;
 
-                    <h3 className="text-xl font-bold text-gray-950">
-                        Whiteboard Explanation
-                    </h3>
+  return (
+    <section className="cc-visual-workspace">
+      <div className="cc-lesson-heading">
+        <div>
+          <p className="cc-eyebrow">Visual lesson</p>
+          <h2>Interactive explanation</h2>
+        </div>
+        <div className={`cc-release-status ${isVerified ? "is-pass" : "is-warn"}`}>
+          <StatusIcon size={15} />
+          {isVerified ? "Quality checks passed" : "Review recommended"}
+        </div>
+      </div>
 
-                    <p className="mt-1 text-sm leading-6 text-gray-500">
-                        Watch the concept as an animated lesson with scene-by-scene visual
-                        transitions.
-                    </p>
+      <div className="cc-visual-workspace-grid">
+        <VisualLessonPlayer key={lessonKey} scenes={scenes} groundingReport={groundingReport} />
 
-                    <div className="mt-3 flex flex-wrap gap-2">
-                        {storyboardSource === "gemini" && (
-                            <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-800">
-                                AI storyboard
-                                {storyboardModelUsed ? ` · ${storyboardModelUsed}` : ""}
-                            </span>
-                        )}
+        <aside className="cc-lesson-inspector">
+          <section>
+            <p className="cc-eyebrow">Lesson approach</p>
+            <h3>{humanize(planningProfile?.primaryArchetype)}</h3>
+            <p className="mt-2 text-sm leading-6 text-gray-500">
+              {planningProfile?.rationale || "The lesson uses the visual structure that best matches the concept."}
+            </p>
+          </section>
 
-                        {storyboardSource === "groq" && (
-                            <span className="rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-800">
-                                AI storyboard
-                                {storyboardModelUsed ? ` · ${storyboardModelUsed}` : ""}
-                            </span>
-                        )}
-                    </div>
-                </div>
+          <div className="cc-inspector-facts">
+            <div><span>Subject</span><strong>{humanize(planningProfile?.subjectDomain)}</strong></div>
+            <div><span>Scenes</span><strong>{scenes.length}</strong></div>
+            <div><span>Quality</span><strong>{Number.isFinite(qualityScore) ? `${qualityScore}/100` : humanize(qualityStatus)}</strong></div>
+          </div>
 
-                <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-900">
-                    {scenes.length} scenes
-                </span>
+          {planningProfile?.limitations?.length > 0 && (
+            <div className="cc-inspector-warning">
+              <Info size={16} />
+              <div>{planningProfile.limitations.map((limitation) => <p key={limitation}>{limitation}</p>)}</div>
             </div>
+          )}
 
-            <VisualLessonPlayer scenes={scenes} />
-        </section>
-    );
+          <GroundingReportPanel groundingReport={groundingReport} compact />
+
+          <details className="cc-diagnostics">
+            <summary>
+              <span><ShieldCheck size={16} />Lesson diagnostics</span>
+              <ChevronDown size={16} />
+            </summary>
+            <div className="space-y-4 pt-4">
+              <div className="cc-diagnostic-row"><span>Generation</span><strong>{humanize(storyboardSource)}{storyboardModelUsed ? ` · ${storyboardModelUsed}` : ""}</strong></div>
+              <div className="cc-diagnostic-row"><span>Scene count</span><strong>{storyboardValidation?.exactSceneCount ? "Verified" : "Mismatch"}</strong></div>
+              <div className="cc-diagnostic-row"><span>Fallback</span><strong>{usedFallback ? "Used" : "Not used"}</strong></div>
+              {repair?.attempted && <div className="cc-diagnostic-row"><span>Repair</span><strong>{humanize(repair.strategy)}</strong></div>}
+
+              {qualityMetrics && (
+                <div className="cc-diagnostic-scores">
+                  {[
+                    ["Structure", qualityMetrics.structureScore],
+                    ["Visual", qualityMetrics.visualSpecificityScore],
+                    ["Narration", qualityMetrics.narrationAlignmentScore],
+                    ["Risk", qualityMetrics.technicalRiskScore],
+                  ].map(([label, value]) => <div key={label}><span>{label}</span><strong>{value}</strong></div>)}
+                </div>
+              )}
+
+              {(issues.length > 0 || qualityIssues.length > 0) && (
+                <ul className="cc-diagnostic-issues">
+                  {issues.slice(0, 6).map((issue) => <li key={issue}>{issue}</li>)}
+                  {qualityIssues.slice(0, 6).map((issue, index) => <li key={`${issue.code}-${index}`}>{issue.message}</li>)}
+                </ul>
+              )}
+            </div>
+          </details>
+        </aside>
+      </div>
+    </section>
+  );
 }
 
 export default VisualPanel;

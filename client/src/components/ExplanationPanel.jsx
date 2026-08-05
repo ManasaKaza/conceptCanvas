@@ -1,208 +1,151 @@
+import GroundingReportPanel, { CitationMarks } from "./GroundingReportPanel";
+
 function getSourceLabel(source, modelUsed) {
-    if (source === "groq") {
-        return modelUsed
-            ? `AI generated · Groq · ${modelUsed}`
-            : "AI generated · Groq";
-    }
-
-    if (source === "gemini") {
-        return modelUsed
-            ? `AI generated · Gemini · ${modelUsed}`
-            : "AI generated · Gemini";
-    }
-
-    return "Demo fallback explanation";
+  if (source === "groq") return modelUsed ? `Groq · ${modelUsed}` : "Groq";
+  if (source === "gemini") return modelUsed ? `Gemini · ${modelUsed}` : "Gemini";
+  return "Deterministic fallback";
 }
 
 function SectionTitle({ children }) {
-    return (
-        <h4 className="mb-3 text-sm font-bold uppercase tracking-wide text-gray-500">
-            {children}
-        </h4>
-    );
+  return <h4 className="cc-article-heading">{children}</h4>;
 }
 
-function ExplanationPanel({ explanation, source, modelUsed }) {
-    if (!explanation) {
-        return null;
-    }
+function ExplanationPanel({ explanation, source, modelUsed, groundingReport, embedded = false }) {
+  if (!explanation) return null;
 
-    const stepByStep = Array.isArray(explanation.stepByStep)
-        ? explanation.stepByStep
-        : [];
+  const stepByStep = Array.isArray(explanation.stepByStep) ? explanation.stepByStep : [];
+  const technicalDetails = Array.isArray(explanation.technicalDetails) ? explanation.technicalDetails : [];
+  const commonConfusions = Array.isArray(explanation.commonConfusions) ? explanation.commonConfusions : [];
+  const takeaways = Array.isArray(explanation.takeaways) ? explanation.takeaways : [];
 
-    const technicalDetails = Array.isArray(explanation.technicalDetails)
-        ? explanation.technicalDetails
-        : [];
+  return (
+    <article className={embedded ? "cc-article cc-article-embedded" : "cc-article"}>
+      <header className="cc-article-header">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <p className="cc-eyebrow">Written lesson</p>
+          <span className="cc-source-label">{getSourceLabel(source, modelUsed)}</span>
+        </div>
+        <h2>{explanation.title || "Concept explanation"}</h2>
+        <p className="cc-article-lead">
+          {explanation.quickMeaning || "Here is a simple explanation."}
+          <CitationMarks groundingReport={groundingReport} section="quickMeaning" />
+        </p>
+      </header>
 
-    const commonConfusions = Array.isArray(explanation.commonConfusions)
-        ? explanation.commonConfusions
-        : [];
+      <div className="cc-article-body">
+        {explanation.deepExplanation && (
+          <section>
+            <SectionTitle>Explanation</SectionTitle>
+            <p className="whitespace-pre-line">
+              {explanation.deepExplanation}
+              <CitationMarks groundingReport={groundingReport} section="deepExplanation" />
+            </p>
+          </section>
+        )}
 
-    const takeaways = Array.isArray(explanation.takeaways)
-        ? explanation.takeaways
-        : [];
+        {stepByStep.length > 0 && (
+          <section>
+            <SectionTitle>Step by step</SectionTitle>
+            <ol className="cc-article-steps">
+              {stepByStep.map((step, index) => (
+                <li key={`${step}-${index}`}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <p>
+                    {step}
+                    <CitationMarks groundingReport={groundingReport} section="stepByStep" itemIndex={index} />
+                  </p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
 
-    return (
-        <section className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm">
-            <div className="mb-5 flex flex-col gap-3 border-b border-gray-100 pb-5">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                    <p className="text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
-                        Text Explanation
-                    </p>
+        <div className="cc-article-pair">
+          <section>
+            <SectionTitle>Analogy</SectionTitle>
+            <p>
+              {explanation.analogy || "No analogy available."}
+              <CitationMarks groundingReport={groundingReport} section="analogy" />
+            </p>
+          </section>
+          <section>
+            <SectionTitle>Example</SectionTitle>
+            <p>
+              {explanation.realWorldExample || "No example available."}
+              <CitationMarks groundingReport={groundingReport} section="realWorldExample" />
+            </p>
+          </section>
+        </div>
 
-                    <span
-                        className={`rounded-full px-3 py-1 text-xs font-semibold ${source === "fallback"
-                            ? "bg-amber-50 text-amber-800"
-                            : "bg-green-50 text-green-800"
-                            }`}
-                    >
-                        {getSourceLabel(source, modelUsed)}
-                    </span>
-                </div>
+        {technicalDetails.length > 0 && (
+          <section>
+            <SectionTitle>Technical details</SectionTitle>
+            <ul className="cc-article-list">
+              {technicalDetails.map((item, index) => (
+                <li key={`${item}-${index}`}>
+                  {item}
+                  <CitationMarks groundingReport={groundingReport} section="technicalDetails" itemIndex={index} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-                <div>
-                    <h3 className="text-2xl font-bold tracking-tight text-gray-950">
-                        {explanation.title || "Concept Explanation"}
-                    </h3>
+        {commonConfusions.length > 0 && (
+          <section className="cc-article-note">
+            <SectionTitle>Common confusions</SectionTitle>
+            <ul>
+              {commonConfusions.map((item, index) => (
+                <li key={`${item}-${index}`}>
+                  {item}
+                  <CitationMarks groundingReport={groundingReport} section="commonConfusions" itemIndex={index} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-                    <p className="mt-3 rounded-2xl bg-blue-50/70 p-4 text-sm leading-7 text-blue-950">
-                        {explanation.quickMeaning || "Here is a simple explanation."}
-                    </p>
-                </div>
-            </div>
+        {explanation.interviewAngle && (
+          <section>
+            <SectionTitle>Interview angle</SectionTitle>
+            <p>
+              {explanation.interviewAngle}
+              <CitationMarks groundingReport={groundingReport} section="interviewAngle" />
+            </p>
+          </section>
+        )}
 
-            <div className="space-y-6">
-                {explanation.deepExplanation && (
-                    <div className="rounded-2xl border border-blue-100 bg-white p-4">
-                        <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-700">
-                            Deep Explanation
-                        </p>
+        {explanation.summary && (
+          <section className="cc-article-summary">
+            <SectionTitle>In one paragraph</SectionTitle>
+            <p>
+              {explanation.summary}
+              <CitationMarks groundingReport={groundingReport} section="summary" />
+            </p>
+          </section>
+        )}
 
-                        <p className="whitespace-pre-line text-sm leading-7 text-gray-700">
-                            {explanation.deepExplanation}
-                        </p>
-                    </div>
-                )}
+        {takeaways.length > 0 && (
+          <section>
+            <SectionTitle>Key takeaways</SectionTitle>
+            <ul className="cc-takeaways">
+              {takeaways.map((takeaway, index) => (
+                <li key={`${takeaway}-${index}`}>
+                  <span aria-hidden="true" />
+                  <p>
+                    {takeaway}
+                    <CitationMarks groundingReport={groundingReport} section="takeaways" itemIndex={index} />
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
-                {stepByStep.length > 0 && (
-                    <div>
-                        <SectionTitle>Step-by-step</SectionTitle>
-
-                        <div className="space-y-3">
-                            {stepByStep.map((step, index) => (
-                                <div
-                                    key={`${step}-${index}`}
-                                    className="flex gap-3 rounded-2xl border border-gray-100 bg-gray-50 p-4"
-                                >
-                                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-900 text-xs font-bold text-white">
-                                        {index + 1}
-                                    </div>
-
-                                    <p className="text-sm leading-6 text-gray-700">{step}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                <div className="grid gap-4 md:grid-cols-2">
-                    <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-                        <p className="mb-2 text-xs font-bold uppercase tracking-wide text-gray-400">
-                            Analogy
-                        </p>
-
-                        <p className="text-sm leading-6 text-gray-700">
-                            {explanation.analogy || "No analogy available."}
-                        </p>
-                    </div>
-
-                    <div className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
-                        <p className="mb-2 text-xs font-bold uppercase tracking-wide text-gray-400">
-                            Real-world example
-                        </p>
-
-                        <p className="text-sm leading-6 text-gray-700">
-                            {explanation.realWorldExample || "No example available."}
-                        </p>
-                    </div>
-                </div>
-
-                {technicalDetails.length > 0 && (
-                    <div>
-                        <SectionTitle>Technical details</SectionTitle>
-
-                        <div className="space-y-2">
-                            {technicalDetails.map((item, index) => (
-                                <div
-                                    key={`${item}-${index}`}
-                                    className="rounded-2xl bg-gray-50 px-4 py-3 text-sm leading-6 text-gray-700"
-                                >
-                                    {item}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {commonConfusions.length > 0 && (
-                    <div>
-                        <SectionTitle>Common confusions</SectionTitle>
-
-                        <div className="space-y-2">
-                            {commonConfusions.map((item, index) => (
-                                <div
-                                    key={`${item}-${index}`}
-                                    className="rounded-2xl bg-amber-50 px-4 py-3 text-sm leading-6 text-amber-900"
-                                >
-                                    {item}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-
-                {explanation.interviewAngle && (
-                    <div className="rounded-2xl bg-indigo-50 px-4 py-4">
-                        <p className="mb-2 text-xs font-bold uppercase tracking-wide text-indigo-700">
-                            Interview angle
-                        </p>
-
-                        <p className="text-sm leading-6 text-indigo-950">
-                            {explanation.interviewAngle}
-                        </p>
-                    </div>
-                )}
-
-                {explanation.summary && (
-                    <div className="rounded-2xl bg-blue-950 px-4 py-4 text-white">
-                        <p className="mb-2 text-xs font-bold uppercase tracking-wide text-blue-200">
-                            Summary
-                        </p>
-
-                        <p className="text-sm leading-6">{explanation.summary}</p>
-                    </div>
-                )}
-
-                {takeaways.length > 0 && (
-                    <div>
-                        <SectionTitle>Key takeaways</SectionTitle>
-
-                        <div className="space-y-2">
-                            {takeaways.map((takeaway, index) => (
-                                <div
-                                    key={`${takeaway}-${index}`}
-                                    className="rounded-2xl bg-green-50 px-4 py-3 text-sm font-medium leading-6 text-green-900"
-                                >
-                                    ✓ {takeaway}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
-            </div>
-        </section>
-    );
+        <GroundingReportPanel groundingReport={groundingReport} />
+      </div>
+    </article>
+  );
 }
 
 export default ExplanationPanel;

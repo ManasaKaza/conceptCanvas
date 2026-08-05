@@ -1,105 +1,179 @@
 # ConceptCanvas
 
-ConceptCanvas is an AI-powered visual learning tutor that turns concept-based questions into structured text explanations, visual storyboard scenes, narration, subtitles, and follow-up learning threads.
+I built ConceptCanvas to explore a better way of learning complex topics.
 
-Instead of only giving a long text answer, ConceptCanvas helps learners understand concepts step by step through text, visuals, and audio.
+Most AI tools return a long text answer. ConceptCanvas turns a question into a structured explanation, a scene-by-scene visual lesson, synchronized narration, and playback controls so the learner can follow one idea at a time.
 
----
+## What I developed
 
-## Problem
+- A topic-independent lesson generation pipeline
+- Structured explanations for different learner levels and depths
+- Exact scene-count handling and canonical scene numbering
+- A typed visual grammar for nodes, edges, groups, annotations, and narration targets
+- Reusable renderers for flows, hierarchies, stacks, timelines, cycles, comparisons, concept maps, formulas, and state transitions
+- Narration synchronized with the currently highlighted visual elements
+- Validation and repair for malformed AI-generated lessons
+- Honest AI, hybrid, and deterministic fallback states
+- Claim-level grounding and lesson quality checks
+- Conversation history for local development
+- A responsive visual-learning workspace
+- CI, staging configuration, and deployment setup
 
-Many learners struggle to understand concepts clearly because existing learning content is often:
+The visual-planning layer is based on the structure of a concept, not a fixed list of topics. For example, a networking question may use a sequence diagram, recursion may use a call stack, a historical topic may use a timeline, and a biological process may use a cycle or flow.
 
-* too long
-* too text-heavy
-* scattered across videos, articles, notes, and AI chats
-* not focused on the learner’s exact question
-* difficult to revise quickly before interviews or assessments
+## How it works
 
-ConceptCanvas solves this by generating focused explanations and visual learning flows on demand.
+```text
+Question
+  ↓
+Lesson requirements
+  ↓
+Structured explanation
+  ↓
+Visual planning
+  ↓
+Typed scenes and narration
+  ↓
+Validation and repair
+  ↓
+Interactive lesson player
+```
 
----
+The backend treats the model response as a candidate lesson. It validates scene count, numbering, visual references, narration alignment, and quality before the lesson reaches the frontend.
 
-## Features
-
-* Ask any concept-based question
-* Choose between Text Only and Text + Visual modes
-* Generate structured explanations with:
-
-  * simple meaning
-  * deep explanation
-  * step-by-step breakdown
-  * analogy
-  * real-world example
-  * common confusions
-  * interview angle
-  * key takeaways
-* Generate visual storyboard scenes
-* Watch animated visual lessons
-* Voice narration support
-* Live subtitles
-* Playback controls: play, pause, replay, next, previous, stop
-* Dark and light theme support
-* Follow-up questions
-* Threaded learning conversations
-* SQLite-based conversation history
-
----
-
-## Tech Stack
+## Tech stack
 
 ### Frontend
 
-* React
-* Vite
-* JavaScript
-* Tailwind CSS
-* Lucide React icons
-* Browser Speech Synthesis API
+- React
+- Vite
+- Tailwind CSS
+- SVG-based typed visual renderers
+- Browser speech synthesis
 
 ### Backend
 
-* FastAPI
-* Python
-* Pydantic
-* SQLite
-* Groq LLM API
+- FastAPI
+- Pydantic
+- Groq or Gemini
+- SQLite for local development
+- Provider-independent grounding and quality evaluation
 
-### AI
+### Deployment and testing
 
-* Groq LLM for explanation generation
-* Groq LLM for visual storyboard generation
-* Rule-based fallback storyboard generation
-* Storyboard validation and normalization
+- GitHub Actions
+- Render
+- Vercel
+- Python unit tests
+- Frontend visual-model tests
+- Cross-domain quality benchmark
 
----
-
-## Architecture
+## Project structure
 
 ```text
-Learner
-  ↓
-React Frontend
-  ↓
-FastAPI Backend
-  ↓
-Question Classifier
-  ↓
-Explanation Service
-  ↓
-Groq LLM
-  ↓
-Storyboard Service
-  ↓
-Validation and Fallback Logic
-  ↓
-SQLite Conversation Store
-  ↓
-Text Explanation + Visual Lesson Player
+ConceptCanvas
+├── client
+│   ├── src
+│   ├── tests
+│   └── vercel.json
+├── server
+│   ├── app
+│   ├── tests
+│   ├── scripts
+│   ├── benchmarks
+│   ├── evaluation
+│   └── grounding
+├── .github
+│   └── workflows
+└── render.yaml
 ```
 
-## Why ConceptCanvas
+## Run locally
 
-ConceptCanvas is designed for learners who want quick, focused, and visual explanations instead of switching between long videos, dense notes, and scattered online resources.
+### Backend
 
-It combines structured AI explanations with visual storytelling, narration, subtitles, and threaded follow-up learning.
+```powershell
+cd server
+
+Copy-Item .env.example .env
+
+py -3.13 -m venv .venv
+
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+
+.\.venv\Scripts\python.exe -m unittest discover -s tests -p "test_*.py"
+
+.\.venv\Scripts\python.exe -m uvicorn app.main:app `
+  --reload `
+  --host 127.0.0.1 `
+  --port 8000
+```
+
+The API will run at `http://127.0.0.1:8000`.
+
+### Frontend
+
+```powershell
+cd client
+
+Copy-Item .env.example .env
+
+npm ci
+npm run lint
+npm run test:visual
+npm run build
+npm run dev
+```
+
+The frontend will run at `http://localhost:5173`.
+
+## Environment
+
+The repository contains example environment files only.
+
+Create local files from:
+
+```text
+server/.env.example
+client/.env.example
+```
+
+API keys and local environment files must not be committed.
+
+ConceptCanvas can run with deterministic generation for local checks. To use an AI provider, configure a Groq or Gemini key in `server/.env`.
+
+## Verification
+
+The current release includes:
+
+- Backend contract, planner, repair, grounding, evaluation, and deployment-safety tests
+- Frontend visual-model and narration-timeline tests
+- A cross-domain benchmark covering computing, mathematics, science, social science, humanities, business, and everyday learning
+- GitHub Actions checks for tests, linting, benchmarking, and production build
+
+## Deployment
+
+The frontend is configured for Vercel and the backend is configured for Render.
+
+The deployed frontend uses:
+
+```text
+VITE_API_BASE_URL=<Render backend URL>
+```
+
+The backend uses an environment-controlled list of allowed frontend origins.
+
+## Current status
+
+ConceptCanvas is ready for local use and a protected staging or portfolio deployment.
+
+Before a full public multi-user release, the product still needs authentication, user-owned lesson history, PostgreSQL, production-grade rate limiting, usage quotas, and broader source retrieval.
+
+## Live demo
+
+The live link will be added here after deployment.
+
+## Developer
+
+Developed by Manasa Kaza.

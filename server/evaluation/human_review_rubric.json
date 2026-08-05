@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "1.0",
+  "title": "ConceptCanvas Human Lesson Review Rubric",
+  "scale": {
+    "minimum": 1,
+    "maximum": 5,
+    "meaning": "1 is unacceptable, 3 is usable with revision, and 5 is release quality."
+  },
+  "dimensions": [
+    {
+      "id": "technical_accuracy",
+      "label": "Technical or factual accuracy",
+      "weight": 0.22,
+      "critical": true,
+      "anchors": {
+        "1": "Contains major falsehoods, contradictions, or unsafe claims.",
+        "3": "Mostly correct but includes imprecision, missing conditions, or claims needing qualification.",
+        "5": "Correct, appropriately qualified, and consistent with authoritative evidence."
+      }
+    },
+    {
+      "id": "instruction_adherence",
+      "label": "User instruction adherence",
+      "weight": 0.12,
+      "critical": true,
+      "anchors": {
+        "1": "Ignores requested structure, audience, or scene count.",
+        "3": "Follows the main request but misses one meaningful constraint.",
+        "5": "Follows all explicit constraints without unnecessary additions."
+      }
+    },
+    {
+      "id": "pedagogical_progression",
+      "label": "Pedagogical progression",
+      "weight": 0.14,
+      "critical": false,
+      "anchors": {
+        "1": "Scenes are confusing, repetitive, or incorrectly ordered.",
+        "3": "The lesson is understandable but transitions or prerequisite explanations need work.",
+        "5": "Each scene adds one clear idea and prepares the learner for the next."
+      }
+    },
+    {
+      "id": "visual_appropriateness",
+      "label": "Visual appropriateness and specificity",
+      "weight": 0.14,
+      "critical": false,
+      "anchors": {
+        "1": "Visuals are misleading, generic, or unrelated to the concept.",
+        "3": "The diagram type is reasonable but some entities or relationships remain generic.",
+        "5": "The visual form matches the knowledge structure and uses concept-specific entities and relationships."
+      }
+    },
+    {
+      "id": "narration_visual_alignment",
+      "label": "Narration-to-visual alignment",
+      "weight": 0.12,
+      "critical": false,
+      "anchors": {
+        "1": "Narration describes content that is absent or conflicts with the current visual.",
+        "3": "Narration usually matches but occasionally gets ahead of or repeats the visual.",
+        "5": "Every narration segment explains the elements currently visible or being introduced."
+      }
+    },
+    {
+      "id": "clarity_for_audience",
+      "label": "Clarity for the selected learner level",
+      "weight": 0.1,
+      "critical": false,
+      "anchors": {
+        "1": "Language and depth are unsuitable for the selected audience.",
+        "3": "Generally understandable with some unexplained jargon or oversimplification.",
+        "5": "Vocabulary, examples, and depth fit the selected learner level."
+      }
+    },
+    {
+      "id": "source_quality",
+      "label": "Source and citation quality",
+      "weight": 0.1,
+      "critical": true,
+      "anchors": {
+        "1": "Sources are absent, irrelevant, low-authority, or do not support the attached claims.",
+        "3": "Sources support most key claims but coverage or authority is inconsistent.",
+        "5": "Important factual claims have accurate claim-level citations to authoritative sources."
+      }
+    },
+    {
+      "id": "fallback_honesty",
+      "label": "Fallback and uncertainty honesty",
+      "weight": 0.06,
+      "critical": false,
+      "anchors": {
+        "1": "The lesson hides unsupported visuals, missing evidence, or model failures.",
+        "3": "Major limitations are shown but some uncertainty is unclear.",
+        "5": "AI, hybrid, fallback, source coverage, and limitations are reported transparently."
+      }
+    }
+  ],
+  "releaseGate": {
+    "minimumWeightedScore": 4.0,
+    "minimumCriticalDimensionScore": 4,
+    "maximumCriticalErrors": 0,
+    "requiredReviewersPerLesson": 2,
+    "disagreementReviewThreshold": 1.5
+  },
+  "reviewerFields": [
+    "reviewerId",
+    "caseId",
+    "lessonVersion",
+    "scores",
+    "criticalErrors",
+    "bestPart",
+    "mainProblem",
+    "recommendedChange",
+    "releaseDecision"
+  ]
+}

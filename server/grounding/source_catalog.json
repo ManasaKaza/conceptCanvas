@@ -1,0 +1,138 @@
+{
+  "schemaVersion": "1.0",
+  "description": "Small offline seed catalog for development and deterministic tests. Production should use a trusted retrieval service through the grounding provider contract.",
+  "documents": [
+    {
+      "sourceId": "source_rfc_dns_1034",
+      "title": "Domain Names - Concepts and Facilities (RFC 1034)",
+      "publisher": "RFC Editor",
+      "url": "https://www.rfc-editor.org/rfc/rfc1034",
+      "authority": "primary",
+      "statements": [
+        {
+          "text": "The domain name system uses a distributed hierarchical namespace and name servers to resolve names.",
+          "keywords": ["DNS", "domain name", "hierarchy", "name server", "resolve"],
+          "locator": "Sections 2-4",
+          "confidence": 0.93
+        },
+        {
+          "text": "Resolvers query name servers and may use cached information when answering later requests.",
+          "keywords": ["resolver", "cache", "query", "DNS answer"],
+          "locator": "Sections 5-7",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "sourceId": "source_postgresql_indexes",
+      "title": "PostgreSQL Documentation: Introduction to Indexes",
+      "publisher": "PostgreSQL Global Development Group",
+      "url": "https://www.postgresql.org/docs/current/indexes-intro.html",
+      "authority": "official",
+      "statements": [
+        {
+          "text": "Indexes can improve row retrieval by avoiding a full scan, but they add maintenance overhead when data changes.",
+          "keywords": ["database index", "faster", "row retrieval", "full table scan", "write overhead"],
+          "locator": "Introduction to Indexes",
+          "confidence": 0.95
+        },
+        {
+          "text": "An index is a separate data structure that the database can search to locate rows efficiently.",
+          "keywords": ["index", "searchable structure", "locate rows", "database"],
+          "locator": "Introduction to Indexes",
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "sourceId": "source_mdn_event_loop",
+      "title": "JavaScript execution model and event loop",
+      "publisher": "MDN Web Docs",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Event_loop",
+      "authority": "reference",
+      "statements": [
+        {
+          "text": "JavaScript agents use a stack and a job queue; queued jobs are processed when the stack is able to run them.",
+          "keywords": ["event loop", "call stack", "job queue", "JavaScript", "tasks"],
+          "locator": "Runtime concepts",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "sourceId": "source_python_recursion",
+      "title": "Python Language Reference: Execution model",
+      "publisher": "Python Software Foundation",
+      "url": "https://docs.python.org/3/reference/executionmodel.html",
+      "authority": "official",
+      "statements": [
+        {
+          "text": "Function execution creates execution frames, and recursive calls create additional active frames until calls return.",
+          "keywords": ["recursion", "function calls", "execution frame", "call stack", "returns", "base case"],
+          "locator": "Execution model",
+          "confidence": 0.78
+        }
+      ]
+    },
+    {
+      "sourceId": "source_openstax_photosynthesis",
+      "title": "Biology 2e: Photosynthesis",
+      "publisher": "OpenStax",
+      "url": "https://openstax.org/books/biology-2e/pages/8-introduction",
+      "authority": "academic",
+      "statements": [
+        {
+          "text": "Photosynthesis captures light energy and stores it in chemical compounds through light-dependent reactions and carbon fixation.",
+          "keywords": ["photosynthesis", "light energy", "chemical energy", "carbon dioxide", "glucose", "chloroplast"],
+          "locator": "Chapter 8",
+          "confidence": 0.88
+        }
+      ]
+    },
+    {
+      "sourceId": "source_openstax_kinetic_energy",
+      "title": "University Physics Volume 1: Kinetic Energy",
+      "publisher": "OpenStax",
+      "url": "https://openstax.org/books/university-physics-volume-1/pages/7-2-kinetic-energy",
+      "authority": "academic",
+      "statements": [
+        {
+          "text": "Translational kinetic energy is one half of mass multiplied by the square of speed.",
+          "keywords": ["kinetic energy", "one half", "mass", "velocity squared", "speed squared", "KE"],
+          "locator": "Section 7.2",
+          "confidence": 0.96
+        }
+      ]
+    },
+    {
+      "sourceId": "source_openstax_supply_demand",
+      "title": "Principles of Economics 3e: Demand and Supply",
+      "publisher": "OpenStax",
+      "url": "https://openstax.org/books/principles-economics-3e/pages/3-introduction-to-demand-and-supply",
+      "authority": "academic",
+      "statements": [
+        {
+          "text": "In a competitive market, demand and supply interact to determine an equilibrium price and quantity.",
+          "keywords": ["supply", "demand", "equilibrium", "price", "quantity", "market"],
+          "locator": "Chapter 3",
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "sourceId": "source_openstax_french_revolution",
+      "title": "World History Volume 2: The French Revolution",
+      "publisher": "OpenStax",
+      "url": "https://openstax.org/books/world-history-volume-2/pages/7-2-the-french-revolution",
+      "authority": "academic",
+      "statements": [
+        {
+          "text": "The French Revolution began in 1789 amid fiscal crisis, social inequality, and political conflict, leading to major institutional change.",
+          "keywords": ["French Revolution", "1789", "fiscal crisis", "social inequality", "political conflict"],
+          "locator": "Section 7.2",
+          "confidence": 0.9
+        }
+      ]
+    }
+  ]
+}

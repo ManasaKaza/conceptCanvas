@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Menu, Send, Sparkles } from "lucide-react";
 import "./index.css";
 import ThemeToggle from "./components/ThemeToggle";
 import Sidebar from "./components/Sidebar";
 import PromptCard from "./components/PromptCard";
 import ModeSelector from "./components/ModeSelector";
+import LessonSettings from "./components/LessonSettings";
 import ExplanationPanel from "./components/ExplanationPanel";
+import CollapsibleExplanation from "./components/CollapsibleExplanation";
 import VisualPanel from "./components/VisualPanel";
 import FollowUpChips from "./components/FollowUpChips";
 import LoadingSteps from "./components/LoadingSteps";
@@ -12,7 +15,6 @@ import DeclinePanel from "./components/DeclinePanel";
 import ConversationPreview from "./components/ConversationPreview";
 import EmptyState from "./components/EmptyState";
 import { examplePrompts } from "./data/fakeExplanation";
-import { textLoadingSteps, visualLoadingSteps } from "./data/loadingSteps";
 import {
   clearConversationTurns,
   deleteConversation,
@@ -22,30 +24,28 @@ import {
   saveConversationTurn,
 } from "./api/explainApi";
 
-function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 function App() {
   const [question, setQuestion] = useState("");
   const [mode, setMode] = useState("text");
+  const [audienceLevel, setAudienceLevel] = useState("beginner");
+  const [explanationDepth, setExplanationDepth] = useState("standard");
+  const [requestedSceneCount, setRequestedSceneCount] = useState(null);
+  const [groundingMode, setGroundingMode] = useState("preferred");
   const [history, setHistory] = useState([]);
   const [currentMessages, setCurrentMessages] = useState([]);
   const [currentTurns, setCurrentTurns] = useState([]);
   const [activeConversationId, setActiveConversationId] = useState(null);
   const [activeTurnId, setActiveTurnId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
   const [currentResult, setCurrentResult] = useState(null);
   const [error, setError] = useState("");
+  const [saveWarning, setSaveWarning] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const abortControllerRef = useRef(null);
 
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("conceptcanvas-theme") || "light";
   });
-
-  const loadingSteps = mode === "visual" ? visualLoadingSteps : textLoadingSteps;
 
   function createAssistantMessage(result) {
     if (!result) {
@@ -141,8 +141,8 @@ function App() {
 
     setCurrentResult(null);
     setError("");
+    setSaveWarning("");
     setIsLoading(true);
-    setActiveStep(0);
 
     const abortController = new AbortController();
     abortControllerRef.current = abortController;
@@ -153,54 +153,66 @@ function App() {
       const backendRequest = explainQuestion({
         question: trimmedQuestion,
         mode,
+        audienceLevel,
+        explanationDepth,
+        requestedSceneCount,
+        requestedStructure: [],
+        narrationEnabled: true,
+        groundingMode,
         conversationHistory,
         signal: abortController.signal,
       });
 
-      for (let index = 0; index < loadingSteps.length; index += 1) {
-        setActiveStep(index);
-        await delay(700);
-      }
-
       const result = await backendRequest;
-
-      const savedTurn = await saveConversationTurn({
-        conversationId: activeConversationId,
-        question: trimmedQuestion,
-        mode,
-        result,
-      });
-
+      const temporaryTurnId = `local-${Date.now()}`;
       const newTurn = {
-        id: savedTurn.turnId,
+        id: temporaryTurnId,
         question: trimmedQuestion,
         mode,
         result,
         created_at: new Date().toISOString(),
       };
 
-      const nextTurns = [...currentTurns, newTurn];
-
-      const userMessage = {
-        role: "user",
-        content: trimmedQuestion,
-      };
-
+      const userMessage = { role: "user", content: trimmedQuestion };
       const assistantMessage = {
         role: "assistant",
         content: createAssistantMessage(result),
       };
 
-      const nextMessages = [...currentMessages, userMessage, assistantMessage];
-
-      setActiveConversationId(savedTurn.conversationId);
-      setActiveTurnId(savedTurn.turnId);
-      setCurrentTurns(nextTurns);
-      setCurrentMessages(nextMessages);
+      setActiveTurnId(temporaryTurnId);
+      setCurrentTurns((turns) => [...turns, newTurn]);
+      setCurrentMessages((messages) => [
+        ...messages,
+        userMessage,
+        assistantMessage,
+      ]);
       setCurrentResult(result);
       setQuestion("");
 
-      await loadConversations();
+      try {
+        const savedTurn = await saveConversationTurn({
+          conversationId: activeConversationId,
+          question: trimmedQuestion,
+          mode,
+          result,
+        });
+
+        setActiveConversationId(savedTurn.conversationId);
+        setActiveTurnId(savedTurn.turnId);
+        setCurrentTurns((turns) =>
+          turns.map((turn) =>
+            turn.id === temporaryTurnId
+              ? { ...turn, id: savedTurn.turnId }
+              : turn,
+          ),
+        );
+        await loadConversations();
+      } catch (saveError) {
+        console.error("Lesson generated but could not be saved:", saveError);
+        setSaveWarning(
+          "Your lesson was generated successfully, but it could not be added to history.",
+        );
+      }
     } catch (apiError) {
       if (apiError.name === "AbortError") {
         setError("Generation cancelled.");
@@ -209,7 +221,8 @@ function App() {
 
       console.error(apiError);
       setError(
-        "Could not generate the explanation. Please check if FastAPI is running and try again.",
+        apiError.message ||
+          "Could not generate the explanation. Please check if FastAPI is running and try again.",
       );
     } finally {
       abortControllerRef.current = null;
@@ -226,8 +239,15 @@ function App() {
 
     setActiveTurnId(selectedTurn.id);
     setMode(selectedTurn.mode || "text");
+    setAudienceLevel(selectedTurn.result?.audienceLevel || "beginner");
+    setExplanationDepth(selectedTurn.result?.explanationDepth || "standard");
+    setRequestedSceneCount(
+      selectedTurn.result?.storyboardValidation?.requestedSceneCount ?? null,
+    );
+    setGroundingMode(selectedTurn.result?.groundingReport?.mode || "preferred");
     setCurrentResult(selectedTurn.result);
     setError("");
+    setSaveWarning("");
   }
 
   function handleThemeToggle() {
@@ -248,7 +268,6 @@ function App() {
     }
 
     setIsLoading(false);
-    setActiveStep(0);
     setError("Generation cancelled.");
   }
 
@@ -267,6 +286,7 @@ function App() {
     setCurrentTurns([]);
     setCurrentResult(null);
     setError("");
+    setSaveWarning("");
   }
 
   async function handleClearConversation() {
@@ -276,6 +296,7 @@ function App() {
       setCurrentResult(null);
       setActiveTurnId(null);
       setQuestion("");
+      setSaveWarning("");
       return;
     }
 
@@ -287,6 +308,7 @@ function App() {
       setCurrentResult(null);
       setActiveTurnId(null);
       setQuestion("");
+      setSaveWarning("");
 
       await loadConversations();
     } catch (clearError) {
@@ -343,8 +365,15 @@ function App() {
       setActiveTurnId(latestTurn?.id || null);
       setCurrentResult(latestTurn?.result || null);
       setMode(latestTurn?.mode || "text");
+      setAudienceLevel(latestTurn?.result?.audienceLevel || "beginner");
+      setExplanationDepth(latestTurn?.result?.explanationDepth || "standard");
+      setRequestedSceneCount(
+        latestTurn?.result?.storyboardValidation?.requestedSceneCount ?? null,
+      );
+      setGroundingMode(latestTurn?.result?.groundingReport?.mode || "preferred");
       setQuestion("");
       setError("");
+      setSaveWarning("");
     } catch (selectError) {
       console.error(selectError);
       setError("Failed to open conversation");
@@ -356,11 +385,10 @@ function App() {
 
   const isDeclined = currentResult?.topicType === "declined";
 
+  const activeLessonTitle = currentResult?.title || currentResult?.explanation?.title;
+
   return (
-    <div
-      data-theme={theme}
-      className="app-theme min-h-screen bg-[#f7f8fb] text-gray-900"
-    >
+    <div data-theme={theme} className="app-theme cc-app-shell">
       <div className="flex min-h-screen">
         <Sidebar
           history={history}
@@ -374,90 +402,85 @@ function App() {
           disabled={isLoading}
         />
 
-        <main className="flex-1 p-4 md:p-8">
-          <div className="mb-4 flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm md:hidden">
-            <div>
-              <h1 className="text-lg font-bold text-blue-900">
-                ConceptCanvas
-              </h1>
-              <p className="text-xs text-gray-500">
-                AI visual learning tutor
+        <main className="cc-main">
+          <header className="cc-topbar">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 md:hidden">
+                <div className="cc-brand-mark" aria-hidden="true"><span /><span /><span /></div>
+                <strong className="text-sm text-gray-900">ConceptCanvas</strong>
+              </div>
+              <p className="hidden text-xs font-medium text-gray-400 md:block">
+                {activeConversationId ? "Learning thread" : "Workspace"}
               </p>
+              <h1 className="mt-0.5 hidden truncate text-base font-semibold tracking-[-0.02em] text-gray-900 md:block">
+                {activeLessonTitle || "New visual lesson"}
+              </h1>
             </div>
 
             <div className="flex items-center gap-2">
               <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
-
-              <button
-                onClick={() => setIsSidebarOpen(true)}
-                className="rounded-xl border border-gray-200 bg-gray-50 px-4 py-2 text-sm font-semibold text-gray-700"
-              >
-                Menu
+              <button type="button" onClick={() => setIsSidebarOpen(true)} className="cc-icon-button md:hidden" aria-label="Open menu">
+                <Menu size={18} />
               </button>
             </div>
-          </div>
+          </header>
 
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-8 rounded-[2rem] border border-gray-100 bg-white p-6 shadow-sm md:p-8">
-              <div className="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                <p className="text-sm font-semibold uppercase tracking-wide text-blue-700">
-                  Ask anything. Choose how you learn.
-                </p>
-
-                <div className="hidden md:block">
-                  <ThemeToggle theme={theme} onToggle={handleThemeToggle} />
+          <div className="cc-content">
+            <section className={`cc-composer ${currentResult ? "is-compact" : ""}`}>
+              {!currentResult && (
+                <div className="cc-composer-intro">
+                  <div className="cc-intro-kicker"><Sparkles size={15} />A question becomes a lesson</div>
+                  <h2>What would you like to understand?</h2>
+                  <p>Ask anything. ConceptCanvas will choose the clearest teaching structure, visual format, and narration flow.</p>
                 </div>
-              </div>
+              )}
 
-              <h2 className="text-3xl font-bold tracking-tight text-gray-950 md:text-5xl">
-                Learn any concept with text, visuals, and narration.
-              </h2>
-
-              <p className="mt-3 max-w-2xl text-gray-500">
-                Ask a concept-based question and choose how you want to learn:
-                a structured answer or a whiteboard-style visual explanation.
-              </p>
-
-              <div className="mt-6 grid gap-3 md:grid-cols-4">
-                {examplePrompts.map((prompt) => (
-                  <PromptCard
-                    key={prompt}
-                    prompt={prompt}
-                    onClick={handleExamplePromptClick}
-                    disabled={isLoading}
-                  />
-                ))}
-              </div>
-
-              <div className="mt-6 rounded-3xl border border-gray-200 bg-gray-50 p-4">
+              <div className="cc-prompt-box">
                 <textarea
                   value={question}
                   onChange={(event) => setQuestion(event.target.value)}
-                  placeholder="Example: Explain recursion with a simple example..."
-                  className="min-h-24 w-full resize-none bg-transparent text-base outline-none placeholder:text-gray-400"
+                  onKeyDown={(event) => {
+                    if ((event.metaKey || event.ctrlKey) && event.key === "Enter") handleGenerate();
+                  }}
+                  placeholder="Ask a question, for example: Explain how inflation affects a household budget"
                   disabled={isLoading}
+                  rows={currentResult ? 2 : 4}
                 />
 
-                <div className="mt-4 flex flex-col gap-3 border-t border-gray-200 pt-4 md:flex-row md:items-center md:justify-between">
-                  <ModeSelector
-                    mode={mode}
-                    onModeChange={setMode}
-                    disabled={isLoading}
-                  />
-
-                  <button
-                    onClick={handleGenerate}
-                    disabled={isLoading || !question.trim()}
-                    className={`rounded-xl px-6 py-2.5 text-sm font-semibold text-white ${isLoading || !question.trim()
-                      ? "cursor-not-allowed bg-gray-400"
-                      : "bg-green-700 hover:bg-green-600"
-                      }`}
-                  >
-                    {isLoading ? "Creating..." : "Generate explanation"}
-                  </button>
+                <div className="cc-composer-actions">
+                  <ModeSelector mode={mode} onModeChange={setMode} disabled={isLoading} />
+                  <div className="flex items-center gap-2">
+                    <LessonSettings
+                      mode={mode}
+                      audienceLevel={audienceLevel}
+                      onAudienceLevelChange={setAudienceLevel}
+                      explanationDepth={explanationDepth}
+                      onExplanationDepthChange={setExplanationDepth}
+                      requestedSceneCount={requestedSceneCount}
+                      onRequestedSceneCountChange={setRequestedSceneCount}
+                      groundingMode={groundingMode}
+                      onGroundingModeChange={setGroundingMode}
+                      disabled={isLoading}
+                    />
+                    <button type="button" onClick={handleGenerate} disabled={isLoading || !question.trim()} className="cc-primary-button">
+                      <Send size={16} />
+                      {isLoading ? "Creating" : "Create lesson"}
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+
+              {!currentResult && (
+                <div className="cc-suggestion-row">
+                  <span>Try</span>
+                  <div className="grid flex-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                    {examplePrompts.map((prompt) => (
+                      <PromptCard key={prompt} prompt={prompt} onClick={handleExamplePromptClick} disabled={isLoading} />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </section>
 
             <ConversationPreview
               turns={currentTurns}
@@ -466,19 +489,10 @@ function App() {
               onClearConversation={handleClearConversation}
             />
 
-            {isLoading && (
-              <LoadingSteps
-                steps={loadingSteps}
-                activeStep={activeStep}
-                onCancel={handleCancelGeneration}
-              />
-            )}
+            {isLoading && <LoadingSteps onCancel={handleCancelGeneration} />}
 
-            {error && (
-              <div className="mb-8 rounded-3xl border border-red-100 bg-red-50 p-5 text-sm text-red-700 shadow-sm">
-                {error}
-              </div>
-            )}
+            {error && <div className="cc-alert is-error">{error}</div>}
+            {saveWarning && <div className="cc-alert is-warning">{saveWarning}</div>}
 
             {!isLoading && !currentResult && <EmptyState />}
 
@@ -492,53 +506,39 @@ function App() {
             )}
 
             {isConceptExplanation && mode === "visual" && (
-              <div className="space-y-8">
-                <div className="mx-auto max-w-6xl">
-                  <VisualPanel
-                    storyboard={currentResult.storyboard}
-                    storyboardSource={currentResult.storyboardSource}
-                    storyboardModelUsed={currentResult.storyboardModelUsed}
-                  />
-                </div>
+              <div className="space-y-6">
+                <VisualPanel
+                  storyboard={currentResult.storyboard}
+                  storyboardSource={currentResult.storyboardSource}
+                  storyboardModelUsed={currentResult.storyboardModelUsed}
+                  storyboardValidation={currentResult.storyboardValidation}
+                  qualityReport={currentResult.qualityReport}
+                  groundingReport={currentResult.groundingReport}
+                />
 
-                <div className="mx-auto max-w-6xl">
-                  <ExplanationPanel
-                    explanation={currentResult.explanation}
-                    source={currentResult.source}
-                    modelUsed={currentResult.modelUsed}
-                  />
-                </div>
+                <CollapsibleExplanation
+                  explanation={currentResult.explanation}
+                  source={currentResult.source}
+                  modelUsed={currentResult.modelUsed}
+                  groundingReport={currentResult.groundingReport}
+                />
 
                 {currentResult.followUps?.length > 0 && (
-                  <div className="mx-auto max-w-6xl">
-                    <FollowUpChips
-                      followUps={currentResult.followUps}
-                      onFollowUpClick={handleFollowUpClick}
-                      disabled={isLoading}
-                    />
-                  </div>
+                  <FollowUpChips followUps={currentResult.followUps} onFollowUpClick={handleFollowUpClick} disabled={isLoading} />
                 )}
               </div>
             )}
 
             {isConceptExplanation && mode !== "visual" && (
-              <div className="space-y-8">
-                <div className="mx-auto max-w-6xl">
-                  <ExplanationPanel
-                    explanation={currentResult.explanation}
-                    source={currentResult.source}
-                    modelUsed={currentResult.modelUsed}
-                  />
-                </div>
-
+              <div className="space-y-6">
+                <ExplanationPanel
+                  explanation={currentResult.explanation}
+                  source={currentResult.source}
+                  modelUsed={currentResult.modelUsed}
+                  groundingReport={currentResult.groundingReport}
+                />
                 {currentResult.followUps?.length > 0 && (
-                  <div className="mx-auto max-w-6xl">
-                    <FollowUpChips
-                      followUps={currentResult.followUps}
-                      onFollowUpClick={handleFollowUpClick}
-                      disabled={isLoading}
-                    />
-                  </div>
+                  <FollowUpChips followUps={currentResult.followUps} onFollowUpClick={handleFollowUpClick} disabled={isLoading} />
                 )}
               </div>
             )}

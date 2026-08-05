@@ -1,164 +1,167 @@
+import { BookOpen, Plus, Trash2, X } from "lucide-react";
+
+function BrandMark() {
+  return (
+    <div className="cc-brand-mark" aria-hidden="true">
+      <span />
+      <span />
+      <span />
+    </div>
+  );
+}
+
 function Sidebar({
-    history,
-    activeConversationId,
-    onNewChat,
-    onSelectHistory,
-    onDeleteHistoryItem,
-    onClearAllHistory,
-    isOpen,
-    onClose,
-    disabled = false,
+  history,
+  activeConversationId,
+  onNewChat,
+  onSelectHistory,
+  onDeleteHistoryItem,
+  onClearAllHistory,
+  isOpen,
+  onClose,
+  disabled = false,
 }) {
-    function handleNewChatClick() {
-        if (disabled) return;
+  function handleNewChatClick() {
+    if (disabled) return;
+    onNewChat();
+    onClose?.();
+  }
 
-        onNewChat();
-        onClose?.();
-    }
+  function handleSelectHistory(item) {
+    if (disabled) return;
+    onSelectHistory(item);
+    onClose?.();
+  }
 
-    function handleSelectHistory(item) {
-        if (disabled) return;
-
-        onSelectHistory(item);
-        onClose?.();
-    }
-
-    function getConversationTitle(item) {
-        return (
-            item.title ||
-            item.first_question ||
-            item.firstQuestion ||
-            item.question ||
-            "Untitled conversation"
-        );
-    }
-
-    function getQuestionCount(item) {
-        return item.question_count || item.questionCount || item.turns?.length || 0;
-    }
-
+  function getConversationTitle(item) {
     return (
-        <>
-            {isOpen && (
-                <button
-                    aria-label="Close sidebar overlay"
-                    onClick={onClose}
-                    className="fixed inset-0 z-30 bg-black/30 md:hidden"
-                />
-            )}
-
-            <aside
-                className={`fixed left-0 top-0 z-40 h-screen w-72 border-r border-gray-200 bg-white p-5 transition-transform duration-300 md:static md:z-auto md:block md:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"
-                    }`}
-            >
-                <div className="mb-6 flex items-start justify-between gap-3">
-                    <div>
-                        <h1 className="text-xl font-bold text-blue-900">ConceptCanvas</h1>
-                        <p className="mt-1 text-sm text-gray-500">
-                            AI visual learning tutor
-                        </p>
-                    </div>
-
-                    <button
-                        onClick={onClose}
-                        className="rounded-lg border border-gray-200 px-2 py-1 text-sm text-gray-500 md:hidden"
-                    >
-                        ✕
-                    </button>
-                </div>
-
-                <button
-                    onClick={handleNewChatClick}
-                    className={`mb-6 w-full rounded-xl px-4 py-3 text-sm font-semibold text-white ${disabled
-                            ? "cursor-not-allowed bg-gray-400"
-                            : "bg-blue-900 hover:bg-blue-800"
-                        }`}
-                >
-                    + New Chat
-                </button>
-
-                <div>
-                    <div className="mb-3 flex items-center justify-between gap-2">
-                        <h2 className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                            History
-                        </h2>
-
-                        {history.length > 0 && (
-                            <button
-                                onClick={onClearAllHistory}
-                                disabled={disabled}
-                                className={`text-xs font-semibold ${disabled
-                                        ? "cursor-not-allowed text-gray-400"
-                                        : "text-red-500 hover:text-red-600"
-                                    }`}
-                            >
-                                Clear all
-                            </button>
-                        )}
-                    </div>
-
-                    {history.length === 0 ? (
-                        <p className="text-sm text-gray-400">No conversations yet.</p>
-                    ) : (
-                        <div className="max-h-[calc(100vh-190px)] space-y-2 overflow-y-auto pr-1">
-                            {history.map((item) => {
-                                const isActive = item.id === activeConversationId;
-                                const title = getConversationTitle(item);
-                                const questionCount = getQuestionCount(item);
-
-                                return (
-                                    <div
-                                        key={item.id}
-                                        className={`group rounded-xl border p-2 transition ${isActive
-                                                ? "border-blue-300 bg-blue-50 shadow-sm"
-                                                : "border-gray-100 bg-gray-50 hover:bg-gray-100"
-                                            }`}
-                                    >
-                                        <button
-                                            onClick={() => handleSelectHistory(item)}
-                                            className="w-full text-left"
-                                        >
-                                            <span
-                                                className={`line-clamp-2 text-sm font-semibold ${isActive ? "text-blue-950" : "text-gray-800"
-                                                    }`}
-                                            >
-                                                {title}
-                                            </span>
-
-                                            <span
-                                                className={`mt-1 block text-xs ${isActive ? "text-blue-700" : "text-gray-500"
-                                                    }`}
-                                            >
-                                                {questionCount}{" "}
-                                                {questionCount === 1 ? "question" : "questions"}
-                                            </span>
-
-                                            {item.lastQuestion && item.lastQuestion !== title && (
-                                                <span className="mt-1 block line-clamp-1 text-xs text-gray-400">
-                                                    Last: {item.lastQuestion}
-                                                </span>
-                                            )}
-                                        </button>
-
-                                        <button
-                                            onClick={() => onDeleteHistoryItem(item.id)}
-                                            disabled={disabled}
-                                            className={`mt-2 hidden text-xs font-semibold group-hover:block ${disabled
-                                                    ? "cursor-not-allowed text-gray-400"
-                                                    : "text-red-500 hover:text-red-600"
-                                                }`}
-                                        >
-                                            Delete
-                                        </button>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
-                </div>
-            </aside>
-        </>
+      item.title ||
+      item.first_question ||
+      item.firstQuestion ||
+      item.question ||
+      "Untitled lesson"
     );
+  }
+
+  function getQuestionCount(item) {
+    return item.question_count || item.questionCount || item.turns?.length || 0;
+  }
+
+  return (
+    <>
+      {isOpen && (
+        <button
+          aria-label="Close sidebar overlay"
+          onClick={onClose}
+          className="fixed inset-0 z-30 bg-black/35 backdrop-blur-[1px] md:hidden"
+        />
+      )}
+
+      <aside
+        className={`cc-sidebar fixed left-0 top-0 z-40 flex h-screen w-[17rem] flex-col transition-transform duration-300 md:sticky md:z-auto md:translate-x-0 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="flex items-center justify-between px-5 pb-4 pt-5">
+          <div className="flex items-center gap-3">
+            <BrandMark />
+            <div>
+              <h1 className="text-[0.98rem] font-semibold tracking-[-0.02em] text-gray-950">
+                ConceptCanvas
+              </h1>
+              <p className="mt-0.5 text-xs text-gray-500">Visual learning studio</p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="cc-icon-button md:hidden"
+            aria-label="Close menu"
+          >
+            <X size={17} />
+          </button>
+        </div>
+
+        <div className="px-4">
+          <button
+            type="button"
+            onClick={handleNewChatClick}
+            disabled={disabled}
+            className="cc-primary-button w-full justify-center"
+          >
+            <Plus size={16} />
+            New lesson
+          </button>
+        </div>
+
+        <div className="mt-7 flex min-h-0 flex-1 flex-col">
+          <div className="flex items-center justify-between px-5">
+            <p className="cc-eyebrow">Recent lessons</p>
+            {history.length > 0 && (
+              <button
+                type="button"
+                onClick={onClearAllHistory}
+                disabled={disabled}
+                className="text-xs font-medium text-gray-400 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          <div className="mt-3 min-h-0 flex-1 overflow-y-auto px-3 pb-5">
+            {history.length === 0 ? (
+              <div className="px-2 py-8 text-center">
+                <BookOpen className="mx-auto text-gray-300" size={22} />
+                <p className="mt-3 text-sm text-gray-400">Your lessons will appear here.</p>
+              </div>
+            ) : (
+              <div className="space-y-1">
+                {history.map((item) => {
+                  const isActive = item.id === activeConversationId;
+                  const title = getConversationTitle(item);
+                  const questionCount = getQuestionCount(item);
+
+                  return (
+                    <div
+                      key={item.id}
+                      className={`group relative rounded-lg transition ${
+                        isActive ? "bg-[var(--cc-accent-soft)]" : "hover:bg-[var(--cc-hover)]"
+                      }`}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => handleSelectHistory(item)}
+                        className="w-full px-3 py-2.5 pr-9 text-left"
+                      >
+                        <span className={`line-clamp-2 text-sm leading-5 ${isActive ? "font-semibold text-gray-950" : "font-medium text-gray-700"}`}>
+                          {title}
+                        </span>
+                        <span className="mt-1 block text-xs text-gray-400">
+                          {questionCount} {questionCount === 1 ? "question" : "questions"}
+                        </span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => onDeleteHistoryItem(item.id)}
+                        disabled={disabled}
+                        className="cc-history-delete absolute right-2 top-2.5"
+                        aria-label={`Delete ${title}`}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
+      </aside>
+    </>
+  );
 }
 
 export default Sidebar;
