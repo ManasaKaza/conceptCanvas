@@ -1,14 +1,12 @@
-function ThemeToggle({ theme, onToggle }) {
-    const isDark = theme === "dark";
+import { Moon, Sun } from "lucide-react";
 
-    return (
-        <button
-            onClick={onToggle}
-            className="rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm hover:bg-gray-50"
-        >
-            {isDark ? "☀️ Light" : "🌙 Dark"}
-        </button>
-    );
+function ThemeToggle({ theme, onToggle }) {
+  const isDark = theme === "dark";
+  return (
+    <button type="button" onClick={onToggle} className="cc-icon-button" aria-label={isDark ? "Use light theme" : "Use dark theme"}>
+      {isDark ? <Sun size={17} /> : <Moon size={17} />}
+    </button>
+  );
 }
 
 export default ThemeToggle;

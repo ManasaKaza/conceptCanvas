@@ -1,28 +1,27 @@
+import { AlignLeft, MonitorPlay } from "lucide-react";
+
 function ModeSelector({ mode, onModeChange, disabled = false }) {
   return (
-    <div className="flex gap-2">
+    <div className="cc-segmented-control" aria-label="Lesson format">
       <button
+        type="button"
         onClick={() => onModeChange("text")}
         disabled={disabled}
-        className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-          mode === "text"
-            ? "bg-blue-900 text-white"
-            : "border border-gray-200 bg-white text-gray-600"
-        } ${disabled ? "cursor-not-allowed opacity-60" : ""}`}
+        aria-pressed={mode === "text"}
+        className={mode === "text" ? "is-active" : ""}
       >
-        Text Only
+        <AlignLeft size={15} />
+        Text
       </button>
-
       <button
+        type="button"
         onClick={() => onModeChange("visual")}
         disabled={disabled}
-        className={`rounded-xl px-4 py-2 text-sm font-semibold ${
-          mode === "visual"
-            ? "bg-blue-900 text-white"
-            : "border border-gray-200 bg-white text-gray-600"
-        } ${disabled ? "cursor-not-allowed opacity-60" : ""}`}
+        aria-pressed={mode === "visual"}
+        className={mode === "visual" ? "is-active" : ""}
       >
-        Text + Visual
+        <MonitorPlay size={15} />
+        Visual
       </button>
     </div>
   );

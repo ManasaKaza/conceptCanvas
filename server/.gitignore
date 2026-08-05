@@ -1,0 +1,30 @@
+# Python
+server/.venv/
+server/__pycache__/
+server/app/__pycache__/
+*.pyc
+
+# Environment
+.env
+server/.env
+client/.env
+
+# Node
+client/node_modules/
+client/dist/
+
+# OS/editor
+.DS_Store
+.vscode/
+
+# Generated benchmark reports
+server/benchmarks/*_results.json
+server/benchmarks/local_*.json
+server/benchmarks/ci_*.json
+
+# Generated benchmark and evaluation reports
+server/benchmarks/*_results.json
+server/benchmarks/local_*.json
+server/benchmarks/ci_*.json
+server/benchmarks/phase*_example.json
+server/benchmarks/phase*_smoke*.json

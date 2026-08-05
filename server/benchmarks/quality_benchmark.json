@@ -1,0 +1,813 @@
+{
+  "schemaVersion": "1.0",
+  "cases": [
+    {
+      "id": "computing_http_sequence",
+      "question": "Explain HTTP request and response interaction",
+      "title": "HTTP Request-Response",
+      "expectedDomain": "computing",
+      "expectedArchetypes": [
+        "sequence"
+      ],
+      "steps": [
+        "The browser creates an HTTP request.",
+        "The request travels to the web server.",
+        "The server processes the request.",
+        "The server returns an HTTP response."
+      ],
+      "summary": "HTTP communication is an ordered exchange between a client and server."
+    },
+    {
+      "id": "computing_cache_process",
+      "question": "How does a web cache work from request to response?",
+      "title": "Web Cache Flow",
+      "expectedDomain": "computing",
+      "expectedArchetypes": [
+        "flow",
+        "sequence"
+      ],
+      "steps": [
+        "A client requests a resource.",
+        "The cache checks for a stored copy.",
+        "A cache hit returns the stored response.",
+        "A cache miss fetches and stores the origin response."
+      ],
+      "summary": "A cache reuses stored responses while forwarding misses to the origin."
+    },
+    {
+      "id": "computing_btree_hierarchy",
+      "question": "Explain the hierarchy of a B-tree database index",
+      "title": "B-tree Index",
+      "expectedDomain": "computing",
+      "expectedArchetypes": [
+        "hierarchy",
+        "tree"
+      ],
+      "steps": [
+        "The root narrows the search range.",
+        "Internal nodes direct the traversal.",
+        "Leaf nodes contain keys or row references.",
+        "The search follows one path to a matching leaf."
+      ],
+      "summary": "A B-tree organizes ordered keys in levels to reduce search work."
+    },
+    {
+      "id": "computing_recursion_stack",
+      "question": "Explain recursion using the call stack and stack frames",
+      "title": "Recursion Call Stack",
+      "expectedDomain": "computing",
+      "expectedArchetypes": [
+        "stack"
+      ],
+      "steps": [
+        "The first call creates a stack frame.",
+        "Each recursive call pushes another frame.",
+        "The base case stops new calls.",
+        "Frames return in reverse order."
+      ],
+      "summary": "Recursion grows and unwinds a stack of waiting calls."
+    },
+    {
+      "id": "computing_event_loop_cycle",
+      "question": "Explain the JavaScript event loop as a repeating cycle",
+      "title": "JavaScript Event Loop",
+      "expectedDomain": "computing",
+      "expectedArchetypes": [
+        "cycle"
+      ],
+      "steps": [
+        "Synchronous code runs on the call stack.",
+        "Async work completes outside the stack.",
+        "Callbacks enter task queues.",
+        "The loop moves ready work to the empty stack."
+      ],
+      "summary": "The event loop repeatedly coordinates the call stack and queues."
+    },
+    {
+      "id": "computing_jwt_sequence",
+      "question": "Show JWT authentication as a client-server sequence",
+      "title": "JWT Authentication",
+      "expectedDomain": "computing",
+      "expectedArchetypes": [
+        "sequence"
+      ],
+      "steps": [
+        "The client sends credentials.",
+        "The server validates the identity.",
+        "The server signs and returns a token.",
+        "The client includes the token in later requests."
+      ],
+      "summary": "JWT authentication uses a signed token across ordered client-server interactions."
+    },
+    {
+      "id": "computing_gc_state",
+      "question": "Explain garbage collection as object state transitions",
+      "title": "Garbage Collection",
+      "expectedDomain": "computing",
+      "expectedArchetypes": [
+        "state_transition"
+      ],
+      "steps": [
+        "Objects begin as reachable allocations.",
+        "References change as the program runs.",
+        "Unreachable objects become collection candidates.",
+        "The collector reclaims eligible memory."
+      ],
+      "summary": "Garbage collection moves objects from reachable to reclaimable states."
+    },
+    {
+      "id": "computing_merge_sort_tree",
+      "question": "Explain merge sort as a split and merge tree",
+      "title": "Merge Sort",
+      "expectedDomain": "computing",
+      "expectedArchetypes": [
+        "hierarchy",
+        "tree"
+      ],
+      "steps": [
+        "The array splits into smaller halves.",
+        "Splitting continues until single elements remain.",
+        "Sorted halves merge together.",
+        "The final merge produces the sorted array."
+      ],
+      "summary": "Merge sort follows a divide-and-merge tree."
+    },
+    {
+      "id": "computing_kubernetes_architecture",
+      "question": "Explain the component architecture of Kubernetes scheduling",
+      "title": "Kubernetes Scheduling",
+      "expectedDomain": "computing",
+      "expectedArchetypes": [
+        "architecture"
+      ],
+      "steps": [
+        "The API server receives a pod definition.",
+        "The scheduler evaluates candidate nodes.",
+        "The scheduler binds the pod to a node.",
+        "The node agent starts the assigned workload."
+      ],
+      "summary": "Kubernetes scheduling coordinates control-plane and node components."
+    },
+    {
+      "id": "computing_algorithm_trace",
+      "question": "Trace how binary search executes step by step",
+      "title": "Binary Search Execution",
+      "expectedDomain": "computing",
+      "expectedArchetypes": [
+        "code_execution"
+      ],
+      "steps": [
+        "Set the low and high bounds.",
+        "Inspect the middle element.",
+        "Discard the half that cannot contain the target.",
+        "Repeat until the target is found or the range is empty."
+      ],
+      "summary": "Binary search repeatedly narrows a sorted search interval."
+    },
+    {
+      "id": "math_linear_formula",
+      "question": "Explain the formula y = mx + b and how variables relate",
+      "title": "Linear Equation",
+      "expectedDomain": "mathematics",
+      "expectedArchetypes": [
+        "formula"
+      ],
+      "steps": [
+        "The slope m controls the rate of change.",
+        "The intercept b sets the starting value.",
+        "Changing x changes y through the slope.",
+        "The equation maps each input to an output."
+      ],
+      "summary": "A linear equation combines slope and intercept to define a straight-line relationship."
+    },
+    {
+      "id": "math_derivative_process",
+      "question": "How does differentiation work as a process?",
+      "title": "Differentiation",
+      "expectedDomain": "mathematics",
+      "expectedArchetypes": [
+        "flow"
+      ],
+      "steps": [
+        "Start with a function.",
+        "Measure change over a small interval.",
+        "Form a difference quotient.",
+        "Take the limiting value when it exists."
+      ],
+      "summary": "Differentiation finds instantaneous rate of change through a limit process."
+    },
+    {
+      "id": "math_probability_tree",
+      "question": "Explain conditional probability using a probability tree",
+      "title": "Conditional Probability",
+      "expectedDomain": "mathematics",
+      "expectedArchetypes": [
+        "hierarchy",
+        "tree"
+      ],
+      "steps": [
+        "The first branch represents an initial event.",
+        "Each next branch represents a conditional event.",
+        "Path probabilities multiply.",
+        "Relevant paths combine for the final probability."
+      ],
+      "summary": "A probability tree organizes conditional events into paths."
+    },
+    {
+      "id": "math_matrix_transform",
+      "question": "Explain how a matrix transforms a vector",
+      "title": "Matrix Transformation",
+      "expectedDomain": "mathematics",
+      "expectedArchetypes": [
+        "flow",
+        "formula"
+      ],
+      "steps": [
+        "A vector supplies input coordinates.",
+        "Matrix rows combine the input values.",
+        "Each combination produces one output coordinate.",
+        "The output vector represents the transformed point."
+      ],
+      "summary": "A matrix transforms a vector through structured linear combinations."
+    },
+    {
+      "id": "math_statistics_compare",
+      "question": "Compare mean versus median",
+      "title": "Mean and Median",
+      "expectedDomain": "mathematics",
+      "expectedArchetypes": [
+        "comparison"
+      ],
+      "steps": [
+        "The mean uses every value in the total.",
+        "The median uses the ordered middle position.",
+        "Outliers can shift the mean strongly.",
+        "The median is often more resistant to extreme values."
+      ],
+      "summary": "Mean and median summarize center in different ways."
+    },
+    {
+      "id": "math_function_map",
+      "question": "Explain a function as a relationship between inputs and outputs",
+      "title": "Functions",
+      "expectedDomain": "mathematics",
+      "expectedArchetypes": [
+        "concept_map",
+        "sequence"
+      ],
+      "steps": [
+        "The domain contains valid inputs.",
+        "A rule maps each input.",
+        "Each input produces exactly one output.",
+        "The range contains produced outputs."
+      ],
+      "summary": "A function defines a consistent mapping from inputs to outputs."
+    },
+    {
+      "id": "science_photosynthesis_flow",
+      "question": "How does photosynthesis work?",
+      "title": "Photosynthesis",
+      "expectedDomain": "natural_science",
+      "expectedArchetypes": [
+        "flow"
+      ],
+      "steps": [
+        "Chlorophyll absorbs light energy.",
+        "Roots provide water.",
+        "Carbon dioxide enters the leaf.",
+        "Reactions form glucose and release oxygen."
+      ],
+      "summary": "Photosynthesis converts light, water, and carbon dioxide into stored chemical energy."
+    },
+    {
+      "id": "science_circulation_cycle",
+      "question": "Explain blood circulation as a cycle",
+      "title": "Blood Circulation",
+      "expectedDomain": "natural_science",
+      "expectedArchetypes": [
+        "cycle"
+      ],
+      "steps": [
+        "The heart pumps oxygenated blood to the body.",
+        "Tissues use oxygen.",
+        "Deoxygenated blood returns to the heart.",
+        "Blood travels through the lungs and returns oxygenated."
+      ],
+      "summary": "Blood continuously cycles through the heart, body, and lungs."
+    },
+    {
+      "id": "science_cell_architecture",
+      "question": "Explain the component structure of an animal cell",
+      "title": "Animal Cell",
+      "expectedDomain": "natural_science",
+      "expectedArchetypes": [
+        "architecture"
+      ],
+      "steps": [
+        "The membrane controls exchange.",
+        "The cytoplasm contains cellular structures.",
+        "The nucleus stores genetic material.",
+        "Organelles perform specialized functions."
+      ],
+      "summary": "An animal cell contains coordinated components with distinct roles."
+    },
+    {
+      "id": "science_water_cycle",
+      "question": "Explain the water cycle",
+      "title": "Water Cycle",
+      "expectedDomain": "natural_science",
+      "expectedArchetypes": [
+        "cycle"
+      ],
+      "steps": [
+        "Water evaporates from surfaces.",
+        "Vapor condenses into clouds.",
+        "Precipitation returns water to the ground.",
+        "Runoff and collection feed evaporation again."
+      ],
+      "summary": "The water cycle repeatedly moves water through atmosphere and surface systems."
+    },
+    {
+      "id": "science_newton_formula",
+      "question": "Explain Newton's second law using F = ma",
+      "title": "Newton's Second Law",
+      "expectedDomain": "natural_science",
+      "expectedArchetypes": [
+        "formula"
+      ],
+      "steps": [
+        "Force is the net push or pull.",
+        "Mass measures resistance to acceleration.",
+        "Acceleration changes with net force.",
+        "For fixed force, greater mass produces less acceleration."
+      ],
+      "summary": "Net force, mass, and acceleration are linked by F = ma."
+    },
+    {
+      "id": "science_food_chain_hierarchy",
+      "question": "Explain a food chain hierarchy from producers to predators",
+      "title": "Food Chain",
+      "expectedDomain": "natural_science",
+      "expectedArchetypes": [
+        "hierarchy"
+      ],
+      "steps": [
+        "Producers capture energy.",
+        "Primary consumers eat producers.",
+        "Secondary consumers eat primary consumers.",
+        "Higher predators occupy later trophic levels."
+      ],
+      "summary": "A food chain organizes energy transfer across trophic levels."
+    },
+    {
+      "id": "science_chemical_reaction_flow",
+      "question": "How does a chemical reaction proceed from reactants to products?",
+      "title": "Chemical Reaction",
+      "expectedDomain": "natural_science",
+      "expectedArchetypes": [
+        "flow"
+      ],
+      "steps": [
+        "Reactants begin with existing bonds.",
+        "Collisions provide opportunities for rearrangement.",
+        "Bonds break and form through a reaction pathway.",
+        "Products have a new arrangement of atoms."
+      ],
+      "summary": "A chemical reaction transforms reactants into products by rearranging bonds."
+    },
+    {
+      "id": "science_dna_process",
+      "question": "Explain DNA replication from start to finish",
+      "title": "DNA Replication",
+      "expectedDomain": "natural_science",
+      "expectedArchetypes": [
+        "flow"
+      ],
+      "steps": [
+        "The double helix opens.",
+        "Each original strand acts as a template.",
+        "Complementary nucleotides are added.",
+        "Two DNA molecules are produced."
+      ],
+      "summary": "DNA replication copies genetic information using complementary templates."
+    },
+    {
+      "id": "science_ecosystem_cause",
+      "question": "Explain how habitat loss causes ecosystem changes",
+      "title": "Habitat Loss",
+      "expectedDomain": "natural_science",
+      "expectedArchetypes": [
+        "cause_effect"
+      ],
+      "steps": [
+        "Habitat area decreases.",
+        "Populations lose food and shelter.",
+        "Species interactions change.",
+        "Biodiversity and ecosystem stability can decline."
+      ],
+      "summary": "Habitat loss can trigger connected ecological effects."
+    },
+    {
+      "id": "science_planet_hierarchy",
+      "question": "Explain the hierarchy of the solar system",
+      "title": "Solar System",
+      "expectedDomain": "natural_science",
+      "expectedArchetypes": [
+        "hierarchy"
+      ],
+      "steps": [
+        "The Sun is the central star.",
+        "Planets orbit the Sun.",
+        "Moons orbit many planets.",
+        "Smaller bodies occupy additional orbital regions."
+      ],
+      "summary": "The solar system is organized around nested orbital relationships."
+    },
+    {
+      "id": "social_supply_demand_compare",
+      "question": "Compare supply versus demand",
+      "title": "Supply and Demand",
+      "expectedDomain": "social_science",
+      "expectedArchetypes": [
+        "comparison"
+      ],
+      "steps": [
+        "Supply describes quantities producers offer.",
+        "Demand describes quantities buyers want.",
+        "Price affects both sides differently.",
+        "Market outcomes reflect their interaction."
+      ],
+      "summary": "Supply and demand describe two sides of a market."
+    },
+    {
+      "id": "social_inflation_cause",
+      "question": "What causes inflation and what effects can follow?",
+      "title": "Inflation",
+      "expectedDomain": "social_science",
+      "expectedArchetypes": [
+        "cause_effect"
+      ],
+      "steps": [
+        "Demand can grow faster than available supply.",
+        "Production costs can rise.",
+        "Broad price levels increase.",
+        "Purchasing power changes for households and firms."
+      ],
+      "summary": "Inflation can emerge from multiple causes and produce connected economic effects."
+    },
+    {
+      "id": "social_election_process",
+      "question": "Explain the election process from nomination to result",
+      "title": "Election Process",
+      "expectedDomain": "social_science",
+      "expectedArchetypes": [
+        "flow"
+      ],
+      "steps": [
+        "Candidates are nominated.",
+        "Campaigns communicate choices.",
+        "Voters cast ballots.",
+        "Votes are counted and results certified."
+      ],
+      "summary": "An election follows an ordered civic process."
+    },
+    {
+      "id": "social_policy_lifecycle",
+      "question": "Explain the public policy lifecycle and state transitions",
+      "title": "Policy Lifecycle",
+      "expectedDomain": "social_science",
+      "expectedArchetypes": [
+        "state_transition"
+      ],
+      "steps": [
+        "An issue enters the public agenda.",
+        "Officials formulate policy options.",
+        "A policy is adopted and implemented.",
+        "Evaluation can lead to revision or termination."
+      ],
+      "summary": "Public policy moves through changing stages from agenda to evaluation."
+    },
+    {
+      "id": "social_psychology_compare",
+      "question": "Compare classical versus operant conditioning",
+      "title": "Conditioning",
+      "expectedDomain": "social_science",
+      "expectedArchetypes": [
+        "comparison"
+      ],
+      "steps": [
+        "Classical conditioning links stimuli.",
+        "Operant conditioning links behavior with consequences.",
+        "The learned association differs.",
+        "Both processes change future responses."
+      ],
+      "summary": "Classical and operant conditioning use different learning relationships."
+    },
+    {
+      "id": "social_government_hierarchy",
+      "question": "Explain the hierarchy of local, state, and national government",
+      "title": "Government Levels",
+      "expectedDomain": "social_science",
+      "expectedArchetypes": [
+        "hierarchy"
+      ],
+      "steps": [
+        "Local institutions handle community responsibilities.",
+        "State institutions operate across a larger region.",
+        "National institutions handle country-wide responsibilities.",
+        "Authority and coordination vary by constitutional system."
+      ],
+      "summary": "Government responsibilities can be organized across levels."
+    },
+    {
+      "id": "humanities_french_timeline",
+      "question": "Show the timeline of the French Revolution",
+      "title": "French Revolution",
+      "expectedDomain": "humanities",
+      "expectedArchetypes": [
+        "timeline"
+      ],
+      "steps": [
+        "Financial crisis weakened the monarchy.",
+        "The Estates-General met in 1789.",
+        "The Bastille was stormed.",
+        "A republic replaced the monarchy."
+      ],
+      "summary": "The French Revolution unfolded through connected events over time."
+    },
+    {
+      "id": "humanities_language_tree",
+      "question": "Explain language families as a classification tree",
+      "title": "Language Families",
+      "expectedDomain": "humanities",
+      "expectedArchetypes": [
+        "tree"
+      ],
+      "steps": [
+        "A language family groups related languages.",
+        "Branches represent historical divergence.",
+        "Sub-branches group closer relatives.",
+        "Individual languages appear at lower levels."
+      ],
+      "summary": "Language families classify languages through nested historical relationships."
+    },
+    {
+      "id": "humanities_story_structure",
+      "question": "Explain the component structure of a three-act story",
+      "title": "Three-Act Structure",
+      "expectedDomain": "humanities",
+      "expectedArchetypes": [
+        "architecture"
+      ],
+      "steps": [
+        "Act one establishes the situation.",
+        "Act two develops conflict and change.",
+        "Act three resolves the central action.",
+        "Transitions connect the acts into one narrative."
+      ],
+      "summary": "A three-act story organizes narrative functions into connected parts."
+    },
+    {
+      "id": "humanities_philosophy_compare",
+      "question": "Compare rationalism versus empiricism",
+      "title": "Rationalism and Empiricism",
+      "expectedDomain": "humanities",
+      "expectedArchetypes": [
+        "comparison"
+      ],
+      "steps": [
+        "Rationalism emphasizes reason.",
+        "Empiricism emphasizes experience.",
+        "They differ in the source of knowledge they prioritize.",
+        "Many views combine elements of both."
+      ],
+      "summary": "Rationalism and empiricism offer contrasting accounts of knowledge."
+    },
+    {
+      "id": "humanities_empire_cause",
+      "question": "Explain causes and effects of the decline of an empire",
+      "title": "Empire Decline",
+      "expectedDomain": "humanities",
+      "expectedArchetypes": [
+        "cause_effect"
+      ],
+      "steps": [
+        "Political conflict can weaken coordination.",
+        "Economic strain can reduce capacity.",
+        "Military pressure can expose vulnerabilities.",
+        "Institutions and territories can fragment."
+      ],
+      "summary": "Empire decline often reflects multiple interacting causes and effects."
+    },
+    {
+      "id": "humanities_art_timeline",
+      "question": "Explain the evolution of an art movement over time",
+      "title": "Art Movement Evolution",
+      "expectedDomain": "humanities",
+      "expectedArchetypes": [
+        "timeline"
+      ],
+      "steps": [
+        "Early artists establish new ideas.",
+        "The style gains recognizable features.",
+        "Later artists adapt or challenge the movement.",
+        "Its influence continues in later work."
+      ],
+      "summary": "An art movement changes through chronological stages and reinterpretation."
+    },
+    {
+      "id": "business_funnel_flow",
+      "question": "Explain the customer acquisition funnel as a process",
+      "title": "Customer Acquisition Funnel",
+      "expectedDomain": "business",
+      "expectedArchetypes": [
+        "flow"
+      ],
+      "steps": [
+        "Potential customers become aware of an offer.",
+        "Interested people evaluate it.",
+        "Some decide to purchase.",
+        "Retention efforts support continued value."
+      ],
+      "summary": "A funnel describes movement from awareness to conversion and retention."
+    },
+    {
+      "id": "business_revenue_compare",
+      "question": "Compare subscription versus transaction revenue models",
+      "title": "Revenue Models",
+      "expectedDomain": "business",
+      "expectedArchetypes": [
+        "comparison"
+      ],
+      "steps": [
+        "Subscriptions produce recurring payments.",
+        "Transactions produce payment per purchase.",
+        "Revenue timing and customer behavior differ.",
+        "Each model creates different operational tradeoffs."
+      ],
+      "summary": "Subscription and transaction models structure revenue differently."
+    },
+    {
+      "id": "business_product_lifecycle",
+      "question": "Explain the product lifecycle as state transitions",
+      "title": "Product Lifecycle",
+      "expectedDomain": "business",
+      "expectedArchetypes": [
+        "state_transition"
+      ],
+      "steps": [
+        "A product begins in introduction.",
+        "Adoption can move it into growth.",
+        "Growth can stabilize into maturity.",
+        "Demand changes can lead to decline or renewal."
+      ],
+      "summary": "A product moves through changing market stages."
+    },
+    {
+      "id": "business_supply_chain_arch",
+      "question": "Explain the component architecture of a supply chain",
+      "title": "Supply Chain",
+      "expectedDomain": "business",
+      "expectedArchetypes": [
+        "architecture"
+      ],
+      "steps": [
+        "Suppliers provide inputs.",
+        "Manufacturers transform inputs.",
+        "Distributors move products.",
+        "Retailers or channels reach customers."
+      ],
+      "summary": "A supply chain connects specialized organizations and flows."
+    },
+    {
+      "id": "business_cashflow_cycle",
+      "question": "Explain the operating cash flow cycle",
+      "title": "Cash Flow Cycle",
+      "expectedDomain": "business",
+      "expectedArchetypes": [
+        "cycle"
+      ],
+      "steps": [
+        "A firm pays for inputs.",
+        "Operations create products or services.",
+        "Customers are billed.",
+        "Collected cash funds the next operating cycle."
+      ],
+      "summary": "Operating cash repeatedly moves through spending, sales, and collection."
+    },
+    {
+      "id": "business_strategy_map",
+      "question": "Explain how goals, capabilities, and actions relate in a strategy map",
+      "title": "Strategy Map",
+      "expectedDomain": "business",
+      "expectedArchetypes": [
+        "concept_map",
+        "architecture"
+      ],
+      "steps": [
+        "Goals define desired outcomes.",
+        "Capabilities enable execution.",
+        "Actions use those capabilities.",
+        "Measures track whether outcomes improve."
+      ],
+      "summary": "A strategy map connects goals, capabilities, actions, and measures."
+    },
+    {
+      "id": "everyday_recipe_flow",
+      "question": "Explain the cooking process for making bread from start to finish",
+      "title": "Bread Making",
+      "expectedDomain": "everyday",
+      "expectedArchetypes": [
+        "flow"
+      ],
+      "steps": [
+        "Ingredients are mixed.",
+        "The dough is kneaded.",
+        "Fermentation develops structure and flavor.",
+        "Baking sets the final loaf."
+      ],
+      "summary": "Bread making follows an ordered preparation and transformation process."
+    },
+    {
+      "id": "everyday_sleep_cycle",
+      "question": "Explain the sleep cycle",
+      "title": "Sleep Cycle",
+      "expectedDomain": "everyday",
+      "expectedArchetypes": [
+        "cycle"
+      ],
+      "steps": [
+        "Light sleep begins the cycle.",
+        "Deeper sleep follows.",
+        "REM sleep becomes prominent later.",
+        "The sequence repeats several times."
+      ],
+      "summary": "Sleep moves through repeating stages across the night."
+    },
+    {
+      "id": "everyday_budget_compare",
+      "question": "Compare fixed versus variable household expenses",
+      "title": "Household Expenses",
+      "expectedDomain": "everyday",
+      "expectedArchetypes": [
+        "comparison"
+      ],
+      "steps": [
+        "Fixed expenses stay relatively stable.",
+        "Variable expenses change with use or choices.",
+        "Planning methods differ for each type.",
+        "Both affect the total household budget."
+      ],
+      "summary": "Fixed and variable expenses behave differently in a budget."
+    },
+    {
+      "id": "everyday_travel_route",
+      "question": "Explain the route relationship between home, station, airport, and destination",
+      "title": "Travel Route",
+      "expectedDomain": "everyday",
+      "expectedArchetypes": [
+        "spatial"
+      ],
+      "steps": [
+        "The trip starts at home.",
+        "Local transport reaches the station or airport.",
+        "A long-distance leg reaches the destination region.",
+        "Final transport reaches the endpoint."
+      ],
+      "summary": "A travel route connects locations through ordered legs."
+    },
+    {
+      "id": "interdisciplinary_climate_cause",
+      "question": "Explain how climate change causes economic and ecosystem effects",
+      "title": "Climate Change Effects",
+      "expectedDomain": "interdisciplinary",
+      "expectedArchetypes": [
+        "cause_effect"
+      ],
+      "steps": [
+        "Climate conditions shift.",
+        "Ecosystems respond to temperature and rainfall changes.",
+        "Agriculture and infrastructure face new pressures.",
+        "Economic and social impacts spread through connected systems."
+      ],
+      "summary": "Climate change links natural and social systems through cascading effects."
+    },
+    {
+      "id": "interdisciplinary_health_data",
+      "question": "Explain how wearable health data flows from sensor to medical dashboard",
+      "title": "Wearable Health Data",
+      "expectedDomain": "interdisciplinary",
+      "expectedArchetypes": [
+        "flow",
+        "sequence"
+      ],
+      "steps": [
+        "A sensor records a biological signal.",
+        "A device processes and transmits the data.",
+        "A cloud service stores and analyzes it.",
+        "A dashboard presents interpreted information."
+      ],
+      "summary": "Wearable health systems connect sensing, computing, and healthcare interpretation."
+    }
+  ]
+}

@@ -1,25 +1,29 @@
 import json
 import sqlite3
 import uuid
-from datetime import datetime
-from pathlib import Path
-
-
-DB_PATH = Path(__file__).resolve().parent.parent / "conceptcanvas.db"
+from contextlib import contextmanager
+from datetime import datetime, timezone
+from app.settings import DB_PATH
 
 
 def get_now() -> str:
-    return datetime.utcnow().isoformat()
+    return datetime.now(timezone.utc).isoformat()
 
 
 def create_id() -> str:
     return str(uuid.uuid4())
 
 
+@contextmanager
 def get_connection():
+    DB_PATH.parent.mkdir(parents=True, exist_ok=True)
     connection = sqlite3.connect(DB_PATH)
     connection.row_factory = sqlite3.Row
-    return connection
+    connection.execute("PRAGMA foreign_keys = ON")
+    try:
+        yield connection
+    finally:
+        connection.close()
 
 
 def init_db():
